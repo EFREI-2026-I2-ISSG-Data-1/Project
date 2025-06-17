@@ -68,9 +68,10 @@ services:
       - kafka
       - kafka-setup
       - influxdb
-
   producer:
     build: ./producer
+    environment:
+      - OPENWEATHER_API_KEY=1db3aed366121b0039d8f0b8ad1f0833
     depends_on:
       - kafka
       - kafka-setup
