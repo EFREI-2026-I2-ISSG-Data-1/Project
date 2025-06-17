@@ -25,8 +25,8 @@ class AirQualityProducer:
         self.kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
         self.topic = os.getenv("KAFKA_TOPIC", "air-quality-paris")
         self.api_key = os.getenv(
-            "OPENWEATHER_API_KEY", "demo_key"
-        )  # Replace with real API key
+            "OPENWEATHER_API_KEY", "1db3aed366121b0039d8f0b8ad1f0833"
+        )
         self.api_url = "http://api.openweathermap.org/data/2.5/air_pollution"
 
         # Paris coordinates
@@ -97,31 +97,6 @@ class AirQualityProducer:
             logger.error(f"Unexpected API response format: {e}")
             return None
 
-    def generate_mock_data(self):
-        """Generate mock air quality data when API is not available"""
-        import random
-
-        return {
-            "timestamp": datetime.utcnow().isoformat(),
-            "location": "Paris",
-            "coordinates": {"lat": self.lat, "lon": self.lon},
-            "aqi": random.randint(1, 5),  # Air Quality Index (1-5)
-            "components": {
-                "co": round(random.uniform(200, 400), 2),  # Carbon monoxide (μg/m³)
-                "no": round(random.uniform(0, 50), 2),  # Nitric oxide (μg/m³)
-                "no2": round(random.uniform(10, 80), 2),  # Nitrogen dioxide (μg/m³)
-                "o3": round(random.uniform(50, 150), 2),  # Ozone (μg/m³)
-                "so2": round(random.uniform(5, 30), 2),  # Sulphur dioxide (μg/m³)
-                "pm2_5": round(
-                    random.uniform(5, 50), 2
-                ),  # Fine particles matter (μg/m³)
-                "pm10": round(
-                    random.uniform(10, 80), 2
-                ),  # Coarse particulate matter (μg/m³)
-                "nh3": round(random.uniform(1, 20), 2),  # Ammonia (μg/m³)
-            },
-        }
-
     def send_to_kafka(self, data):
         """Send data to Kafka topic"""
         try:
@@ -144,29 +119,36 @@ class AirQualityProducer:
 
         while True:
             try:
-                # Try to fetch real data first
+                # Fetch real data from API only
                 data = self.fetch_air_quality_data()
 
-                # If real data fails, use mock data
+                # If real data fails, stop the producer
                 if data is None:
-                    logger.warning("Using mock data due to API unavailability")
-                    data = self.generate_mock_data()
+                    logger.error(
+                        "Failed to fetch data from OpenWeather API. Producer will stop."
+                    )
+                    logger.error("Please check your API key and internet connection.")
+                    break
 
                 # Send to Kafka
                 if self.send_to_kafka(data):
                     logger.info(
-                        f"Sent air quality data: AQI={data['aqi']}, PM2.5={data['components'].get('pm2_5', 'N/A')}"
+                        f"Sent real air quality data: AQI={data['aqi']}, PM2.5={data['components'].get('pm2_5', 'N/A')}"
                     )
+                else:
+                    logger.error("Failed to send data to Kafka. Producer will stop.")
+                    break
 
-                # Wait before next reading (every 5 minutes)
-                time.sleep(300)
+                # Wait before next reading (every 3 minutes)
+                time.sleep(180)
 
             except KeyboardInterrupt:
                 logger.info("Producer stopped by user")
                 break
             except Exception as e:
                 logger.error(f"Unexpected error in producer loop: {e}")
-                time.sleep(30)  # Wait before retrying
+                logger.error("Producer will stop due to error.")
+                break
 
     def close(self):
         """Clean up resources"""

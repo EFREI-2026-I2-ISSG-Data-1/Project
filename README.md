@@ -24,7 +24,7 @@ The system consists of the following components:
 ## Prerequisites
 
 - Docker and Docker Compose
-- OpenWeatherMap API key (optional, falls back to mock data)
+- OpenWeatherMap API key (required for real air quality data)
 
 ## Quick Start
 
@@ -71,8 +71,8 @@ The system consists of the following components:
 
 ### Producer Service
 - Fetches air quality data from OpenWeatherMap API
-- Falls back to mock data if API is unavailable
-- Publishes data to Kafka topic every 5 minutes
+- Publishes data to Kafka topic every 3 minutes
+- Stops if API is unavailable (requires valid API key)
 - Located in `./producer/`
 
 ### Spark Processing Service
@@ -259,7 +259,7 @@ docker-compose down -v
 
 1. **Services not starting**: Check logs and ensure ports are available
 2. **No data in Grafana**: Verify producer is sending data and Spark is processing
-3. **API rate limits**: System falls back to mock data automatically
+3. **API key issues**: Ensure you have a valid OpenWeatherMap API key
 4. **Memory issues**: Adjust Docker resource limits if needed
 
 ### Health Checks:
