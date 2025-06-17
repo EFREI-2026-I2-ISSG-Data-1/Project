@@ -77,6 +77,10 @@ class AirQualityProcessor:
             SparkSession.builder.appName("AirQualityProcessor")
             .config("spark.sql.streaming.checkpointLocation", "/tmp/checkpoint")
             .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "true")
+            .config("spark.local.dir", "/tmp/spark-temp")
+            .config("spark.sql.adaptive.enabled", "false")
+            .config("spark.sql.adaptive.coalescePartitions.enabled", "false")
+            .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
             .getOrCreate()
         )
 

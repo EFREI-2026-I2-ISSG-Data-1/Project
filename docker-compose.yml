@@ -55,8 +55,15 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - influxdb
+      
   spark:
     build: ./spark
+    volumes:
+      - spark_temp:/tmp/spark-temp
+      - spark_checkpoint:/tmp/checkpoint
+    environment:
+      - SPARK_LOCAL_DIRS=/tmp/spark-temp
+      - SPARK_WORKER_DIR=/tmp/spark-temp
     depends_on:
       - kafka
       - kafka-setup
@@ -71,3 +78,5 @@ services:
 volumes:
   influxdb_data:
   grafana_data:
+  spark_temp:
+  spark_checkpoint:
