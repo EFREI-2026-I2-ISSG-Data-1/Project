@@ -1,0 +1,180 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Paris Air Quality Monitoring",
+    "tags": ["air-quality", "paris", "environment"],
+    "style": "dark",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Air Quality Index (AQI)",
+        "type": "stat",
+        "targets": [
+          {
+            "query": "SELECT last(\"aqi\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 2},
+                {"color": "orange", "value": 3},
+                {"color": "red", "value": 4},
+                {"color": "purple", "value": 5}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "PM2.5 Levels",
+        "type": "timeseries",
+        "targets": [
+          {
+            "query": "SELECT mean(\"pm2_5\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "µg/m³"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "PM10 Levels",
+        "type": "timeseries",
+        "targets": [
+          {
+            "query": "SELECT mean(\"pm10\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "µg/m³"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "NO2 Levels",
+        "type": "timeseries",
+        "targets": [
+          {
+            "query": "SELECT mean(\"no2\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "µg/m³"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Ozone (O3) Levels",
+        "type": "timeseries",
+        "targets": [
+          {
+            "query": "SELECT mean(\"o3\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "µg/m³"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "All Pollutants Overview",
+        "type": "timeseries",
+        "targets": [
+          {
+            "query": "SELECT mean(\"pm2_5\") AS \"PM2.5\", mean(\"pm10\") AS \"PM10\", mean(\"no2\") AS \"NO2\", mean(\"o3\") AS \"O3\" FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "µg/m³"
+          }
+        }
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}
