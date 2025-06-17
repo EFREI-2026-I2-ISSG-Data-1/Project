@@ -1,7 +1,6 @@
 {
-  "dashboard": {
-    "id": null,
-    "title": "Paris Air Quality Monitoring",
+  "id": null,
+  "title": "Paris Air Quality Monitoring",
     "tags": ["air-quality", "paris", "environment"],
     "style": "dark",
     "timezone": "browser",
@@ -12,9 +11,10 @@
         "type": "stat",
         "targets": [
           {
-            "query": "SELECT last(\"aqi\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval)",
+            "query": "SELECT last(\"aqi\") FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -39,16 +39,16 @@
             }
           }
         }
-      },
-      {
+      },      {
         "id": 2,
         "title": "PM2.5 Levels",
         "type": "timeseries",
         "targets": [
           {
-            "query": "SELECT mean(\"pm2_5\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "query": "SELECT mean(\"pm2_5\") FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m) fill(null)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -65,16 +65,16 @@
             "unit": "µg/m³"
           }
         }
-      },
-      {
+      },      {
         "id": 3,
         "title": "PM10 Levels",
         "type": "timeseries",
         "targets": [
           {
-            "query": "SELECT mean(\"pm10\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "query": "SELECT mean(\"pm10\") FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m) fill(null)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -95,12 +95,12 @@
       {
         "id": 4,
         "title": "NO2 Levels",
-        "type": "timeseries",
-        "targets": [
+        "type": "timeseries",        "targets": [
           {
-            "query": "SELECT mean(\"no2\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "query": "SELECT mean(\"no2\") FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m) fill(null)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -121,12 +121,12 @@
       {
         "id": 5,
         "title": "Ozone (O3) Levels",
-        "type": "timeseries",
-        "targets": [
+        "type": "timeseries",        "targets": [
           {
-            "query": "SELECT mean(\"o3\") FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "query": "SELECT mean(\"o3\") FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m) fill(null)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -147,12 +147,12 @@
       {
         "id": 6,
         "title": "All Pollutants Overview",
-        "type": "timeseries",
-        "targets": [
+        "type": "timeseries",        "targets": [
           {
-            "query": "SELECT mean(\"pm2_5\") AS \"PM2.5\", mean(\"pm10\") AS \"PM10\", mean(\"no2\") AS \"NO2\", mean(\"o3\") AS \"O3\" FROM \"air_quality\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "query": "SELECT mean(\"pm2_5\") AS \"PM2.5\", mean(\"pm10\") AS \"PM10\", mean(\"no2\") AS \"NO2\", mean(\"o3\") AS \"O3\" FROM \"air_quality\" WHERE time > now() - 6h GROUP BY time(10m) fill(null)",
             "rawQuery": true,
-            "refId": "A"
+            "refId": "A",
+            "datasource": "InfluxDB"
           }
         ],
         "gridPos": {
@@ -174,7 +174,5 @@
     "time": {
       "from": "now-6h",
       "to": "now"
-    },
-    "refresh": "30s"
-  }
+    },    "refresh": "30s"
 }
