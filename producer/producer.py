@@ -139,8 +139,8 @@ class AirQualityProducer:
                     logger.error("Failed to send data to Kafka. Producer will stop.")
                     break
 
-                # Wait before next reading (every 3 minutes)
-                time.sleep(180)
+                # Wait before next reading (every minute)
+                time.sleep(60)
 
             except KeyboardInterrupt:
                 logger.info("Producer stopped by user")

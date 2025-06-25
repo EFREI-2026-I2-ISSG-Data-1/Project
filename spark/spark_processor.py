@@ -221,7 +221,7 @@ class AirQualityProcessor:
             query = (
                 processed_df.writeStream.foreachBatch(self.write_to_influxdb)
                 .outputMode("append")
-                .trigger(processingTime="30 seconds")
+                .trigger(processingTime="10 seconds")
                 .start()
             )
 
